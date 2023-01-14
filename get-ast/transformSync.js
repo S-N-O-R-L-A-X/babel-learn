@@ -1,7 +1,7 @@
 const babel = require("@babel/core");
 
-const code2 = 'function greet(input) {return input ?? "Hello world";}';
-result = babel.transformSync(code2, { ast: true });
+const code = 'function greet(input) {return input ?? "Hello world";}';
+result = babel.transformSync(code, { ast: true });
 
 console.log(result.ast);
 

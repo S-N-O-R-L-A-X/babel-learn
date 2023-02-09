@@ -20,5 +20,8 @@
   "devDependencies": {
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12"
+  },
+  "dependencies": {
+    "babel-generator": "^6.26.1"
   }
 }

@@ -18,10 +18,13 @@ const code = `function square(n) {
   if(n>2)
     return n * n;
 }`;
-const outer = "const obj={};\n" + code;
 
-const ast = babelParser.parse(outer);
+
+const ast = babelParser.parse(code);
 traverse.default(ast, {
+    FunctionDeclaration(path) {
+        path.node.body.body.unshift(types.assignmentExpression("=", types.identifier("obj"), types.objectExpression([])))
+    },
     ReturnStatement(path) {
         path.node.argument = types.objectExpression([types.objectProperty(types.stringLiteral("ret"), path.node.argument), types.objectProperty(types.stringLiteral("obj"), types.identifier("obj"))]);
     },

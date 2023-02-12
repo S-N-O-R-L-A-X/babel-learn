@@ -5,10 +5,17 @@ const generator = require('@babel/generator');
 const template = require('@babel/template')
 
 
+const outerTemplate = `
+    function outer(){
+        const obj={};
+        return obj;
+    }
+`
+
 // 定义try/catch语句模板
 let objTemplate = `
-    obj.left=LEFT;
-    obj.right=RIGHT;
+obj.left=LEFT;
+obj.right=RIGHT;
 `;
 
 // 创建模板
@@ -19,18 +26,11 @@ const code = `function square(n) {
     return n * n;
 }`;
 
+const outer = babelParser.parse(outerTemplate);
 
-const ast = babelParser.parse(code);
+const ast = babelParser.parse(outer);
 traverse.default(ast, {
-    FunctionDeclaration(path) {
-        path.node.body.body.unshift(types.assignmentExpression("=", types.identifier("obj"), types.objectExpression([])))
-        // path.node.body.body.push(types.returnStatement(types.objectExpression([types.objectProperty(types.stringLiteral("ret"), path.node.argument), types.objectProperty(types.stringLiteral("obj"), types.identifier("obj"))])));
-        path.node.body.body.push(types.returnStatement(types.objectExpression([])));
 
-    },
-    ReturnStatement(path) {
-        path.node.argument = types.objectExpression([types.objectProperty(types.stringLiteral("ret"), path.node.argument), types.objectProperty(types.stringLiteral("obj"), types.identifier("obj"))]);
-    },
     IfStatement(path) {
         // 给模版增加key，添加console.log打印信息
         let tempArgumentObj = {

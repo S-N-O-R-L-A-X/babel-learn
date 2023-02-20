@@ -5,6 +5,7 @@ const template = require('@babel/template');
 const generator = require('@babel/generator');
 
 function square(n) {
+    const obj = {};
     if (n > 2)
         n = n + 1;
     if (n < 4) {
@@ -14,8 +15,8 @@ function square(n) {
 
 // 定义try/catch语句模板
 let objTemplate = `
-obj.IDX.left=LEFT;
-obj.IDX.right=RIGHT;
+obj[IDX].left=LEFT;
+obj[IDX].right=RIGHT;
 `;
 
 // 创建模板
@@ -25,7 +26,6 @@ let cnt = 0;
 const ast = babelParser.parse(square.toString());
 traverse.default(ast, {
     IfStatement(path) {
-        console.log(path);
         // 给模版增加key，添加console.log打印信息
         /* istanbul ignore next */
 
@@ -45,4 +45,8 @@ traverse.default(ast, {
     }
 });
 
-console.log(generator.default(ast).code);
+const f = generator.default(ast).code;
+console.log(f);
+
+const modified_function = eval("(false || " + f + ")");
+console.log(modified_function(3));
